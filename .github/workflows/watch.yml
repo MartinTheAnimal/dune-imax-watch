@@ -1,0 +1,56 @@
+name: Dune IMAX watch
+
+on:
+  schedule:
+    # Each run polls for ~55 min, so hourly starts give near-continuous coverage.
+    # Off the :00 mark, where GitHub drops the most scheduled runs.
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      test_notify:
+        description: "Send a test push only"
+        type: boolean
+        default: false
+      report_all:
+        description: "Push the full current list of screenings"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dune-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    env:
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      MIN_SEATS: "2"          # how many seats you need
+      FROM_DATE: "2026-12-14"
+      TO_DATE: ""             # e.g. "2027-01-10" to ignore later dates
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test push
+        if: ${{ inputs.test_notify }}
+        run: python3 watch.py --test-notify
+
+      - name: Poll every 90 s for 55 min
+        if: ${{ !inputs.test_notify }}
+        run: |
+          ARGS="--loop 90 --duration 3300"
+          if [ "${{ inputs.report_all }}" = "true" ]; then ARGS="$ARGS --report-all"; fi
+          python3 watch.py --state state/state.json $ARGS
+
+      - name: Save state
+        if: ${{ always() && !inputs.test_notify }}
+        run: |
+          git config user.name "dune-watch-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add state/state.json
+          git diff --cached --quiet || git commit -q -m "state $(date -u +%FT%TZ)"
+          git pull -q --rebase && git push -q

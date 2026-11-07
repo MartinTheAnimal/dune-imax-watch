@@ -1,0 +1,3 @@
+state/*.tmp
+.ntfy-topic
+__pycache__/
