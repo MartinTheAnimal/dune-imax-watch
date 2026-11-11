@@ -1,5 +1,5 @@
 {
- "lastCheck": "2026-11-11T12:51:23+01:00",
+ "lastCheck": "2026-11-11T13:47:54+01:00",
  "screenings": {
   "248952": {
    "capacity": 385,
@@ -60,12 +60,12 @@
   "267900": {
    "capacity": 385,
    "code": "267900",
-   "floor": 34,
-   "free": 34,
+   "floor": 31,
+   "free": 31,
    "good": 0,
    "hall": "IMAX VOLVO",
    "notifiedOpen": true,
-   "ratio": 0.0883,
+   "ratio": 0.0805,
    "saleStart": "2026-10-20 09:00:00",
    "soldOut": false,
    "url": "https://tickets.cinemacity.cz/order/267900",
