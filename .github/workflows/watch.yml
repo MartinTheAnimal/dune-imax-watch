@@ -34,6 +34,8 @@ jobs:
       TO_DATE: ""             # e.g. "2027-01-10" to ignore later dates
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main   # latest state, not the commit the run was queued on
 
       - name: Test push
         if: ${{ inputs.test_notify }}
@@ -51,6 +53,10 @@ jobs:
         run: |
           git config user.name "dune-watch-bot"
           git config user.email "actions@users.noreply.github.com"
+          # Put this run's state on top of whatever is on main now; this run's file wins.
+          git fetch -q origin main
+          git reset -q --soft origin/main
           git add state/state.json
-          git diff --cached --quiet || git commit -q -m "state $(date -u +%FT%TZ)"
-          git pull -q --rebase && git push -q
+          git diff --cached --quiet && exit 0
+          git commit -q -m "state $(date -u +%FT%TZ)"
+          git push -q origin HEAD:main || echo "::warning::state push lost a race; next run will save"
