@@ -1,5 +1,5 @@
 {
- "lastCheck": "2026-11-27T06:58:59+01:00",
+ "lastCheck": "2026-11-27T07:57:28+01:00",
  "screenings": {
   "248952": {
    "capacity": 385,
@@ -326,12 +326,12 @@
   "291587": {
    "capacity": 385,
    "code": "291587",
-   "floor": 123,
-   "free": 123,
+   "floor": 122,
+   "free": 122,
    "good": 0,
    "hall": "IMAX VOLVO",
    "notifiedOpen": true,
-   "ratio": 0.3195,
+   "ratio": 0.3169,
    "saleStart": "2026-11-25 17:07:00",
    "soldOut": false,
    "url": "https://tickets.cinemacity.cz/order/291587",
